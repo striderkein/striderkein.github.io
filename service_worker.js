@@ -1,7 +1,7 @@
 // キャッシュファイルの指定
 var CACHE_NAME = 'pwa-sample-caches';
 var urlsToCache = [
-    '/striderkein.github.io/test-pwa',
+    '/striderkein.github.io/',
 ];
 
 // インストール処理
