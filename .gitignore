@@ -102,3 +102,6 @@ dist
 
 # TernJS port file
 .tern-port
+
+# 個人情報暗号化ツール
+encrypt-tool.html
