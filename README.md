@@ -1,2 +1,1 @@
-# test-pwa
-this repo is test for PWA
+# 履歴書 — 小澤史朗

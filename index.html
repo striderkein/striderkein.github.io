@@ -1,42 +1,304 @@
 <!DOCTYPE html>
 <html lang="ja">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-　　<!-- vue.js　-->
-    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
-    <link rel="manifest" href="manifest.json">
-    <title>PWA Sample</title>
-  </head>
-  <body>
-    <div id="app">
-      <p>{{ message }}</p>
-      <button v-on:click="reverseMessage">Reverse Message</button>
-      <form method="post">
-        <p><label>Credit card number: </label><input type="text" autocomplete="cc-number">
-      </form>
-    </div>
-    <script>
-    // service workerの登録関係
-    if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service_worker.js').then(function(registration) {
-        console.log('ServiceWorker registration successful with scope: ', registration.scope);
-    }).catch(function(err) {
-        console.log('ServiceWorker registration failed: ', err);
-    });
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>履歴書 — 小澤史朗</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:        #f5f2eb;
+      --surface:   #fefcf7;
+      --border:    #c8b89a;
+      --border-lt: #e2d8c8;
+      --ink:       #1e1a14;
+      --ink-mid:   #5a5040;
+      --ink-lt:    #8a7d6a;
+      --accent:    #8b3a2a;
+      --accent-lt: #b85a44;
+      --mono:      'JetBrains Mono', monospace;
+      --serif:     'Noto Serif JP', serif;
     }
-    // vue.jsの設定関係
-    var app = new Vue({
-      el: '#app',
-      data: {
-        message: 'Hello Vue!'
-      },
-      methods: {
-        reverseMessage: function () {
-          this.message = this.message.split('').reverse().join('')
-        }
-      }
-    });
-    </script>
-  </body>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--ink); font-family: var(--serif); font-weight: 300; line-height: 1.8; min-height: 100vh; }
+    .page-header { background: var(--ink); padding: 12px 40px; display: flex; align-items: center; justify-content: space-between; }
+    .page-header .label { font-family: var(--mono); font-size: 11px; color: var(--border); letter-spacing: 0.15em; text-transform: uppercase; }
+    .page-header .date { font-family: var(--mono); font-size: 11px; color: var(--ink-lt); }
+    .container { max-width: 900px; margin: 0 auto; padding: 40px 24px 80px; }
+    .name-block { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: start; padding-bottom: 32px; border-bottom: 2px solid var(--ink); margin-bottom: 40px; }
+    .furigana { font-family: var(--mono); font-size: 12px; color: var(--ink-lt); letter-spacing: 0.3em; margin-bottom: 4px; }
+    .name-ja { font-size: 42px; font-weight: 500; letter-spacing: 0.15em; line-height: 1.2; }
+    .birth-info { margin-top: 12px; font-family: var(--mono); font-size: 12px; color: var(--ink-mid); }
+    .photo-placeholder { width: 100px; height: 130px; border: 1px solid var(--border); background: var(--bg); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 6px; }
+    .photo-placeholder span { font-family: var(--mono); font-size: 9px; color: var(--ink-lt); letter-spacing: 0.05em; }
+    .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0; border: 1px solid var(--border); margin-bottom: 0; background: var(--surface); }
+    .contact-item { display: grid; grid-template-columns: 88px 1fr; border-bottom: 1px solid var(--border-lt); }
+    .contact-item:last-child { border-bottom: none; }
+    .contact-item .key { padding: 10px 14px; font-family: var(--mono); font-size: 10px; color: var(--ink-lt); letter-spacing: 0.08em; background: var(--bg); border-right: 1px solid var(--border-lt); display: flex; align-items: center; }
+    .contact-item .val { padding: 10px 14px; font-size: 13px; word-break: break-all; }
+    .contact-item .val a { color: var(--accent); text-decoration: none; }
+    .contact-item .val a:hover { text-decoration: underline; }
+    .locked-area { border: 1px solid var(--border); border-top: none; }
+    .lock-panel { display: flex; flex-direction: column; align-items: center; padding: 28px 24px; background: var(--surface); gap: 10px; }
+    .lock-icon { color: var(--ink-lt); opacity: 0.6; }
+    .lock-label { font-family: var(--mono); font-size: 11px; color: var(--ink-lt); letter-spacing: 0.05em; }
+    .pw-form { display: flex; gap: 0; width: 100%; max-width: 360px; }
+    .pw-form input { flex: 1; padding: 9px 14px; font-family: var(--mono); font-size: 13px; border: 1px solid var(--border); border-right: none; background: var(--bg); color: var(--ink); outline: none; }
+    .pw-form input:focus { border-color: var(--accent); }
+    .pw-form button { padding: 9px 20px; background: var(--accent); color: #fff; border: none; font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; cursor: pointer; transition: background 0.15s; }
+    .pw-form button:hover { background: var(--accent-lt); }
+    .pw-form button:disabled { opacity: 0.6; cursor: not-allowed; }
+    .pw-error { font-family: var(--mono); font-size: 11px; color: var(--accent); display: none; }
+    .section { margin-bottom: 48px; }
+    .section-title { font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 20px; }
+    .hist-table { width: 100%; border-collapse: collapse; font-size: 14px; background: var(--surface); border: 1px solid var(--border); }
+    .hist-table thead tr { background: var(--bg); }
+    .hist-table th { font-family: var(--mono); font-size: 10px; font-weight: 400; letter-spacing: 0.1em; color: var(--ink-lt); padding: 8px 16px; border-bottom: 1px solid var(--border); text-align: left; }
+    .hist-table td { padding: 9px 16px; border-bottom: 1px solid var(--border-lt); vertical-align: top; }
+    .hist-table tr:last-child td { border-bottom: none; }
+    .hist-table .ym { font-family: var(--mono); font-size: 12px; color: var(--ink-mid); white-space: nowrap; width: 84px; }
+    .work-scroll-wrapper { border: 1px solid var(--border); background: var(--surface); position: relative; }
+    .work-scroll-header { display: grid; grid-template-columns: 84px 1fr; background: var(--bg); border-bottom: 1px solid var(--border); }
+    .work-scroll-header span { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; color: var(--ink-lt); padding: 8px 16px; }
+    .work-scroll-header span:first-child { border-right: 1px solid var(--border-lt); }
+    .work-scroll-body { max-height: 420px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+    .work-scroll-body::-webkit-scrollbar { width: 6px; }
+    .work-scroll-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    .work-row { display: grid; grid-template-columns: 84px 1fr; border-bottom: 1px solid var(--border-lt); font-size: 14px; transition: background 0.15s; }
+    .work-row:last-child { border-bottom: none; }
+    .work-row:hover { background: #f0ebe0; }
+    .work-row .ym { font-family: var(--mono); font-size: 12px; color: var(--ink-mid); padding: 9px 16px; border-right: 1px solid var(--border-lt); white-space: nowrap; align-self: center; }
+    .work-row .ev { padding: 9px 16px; align-self: center; }
+    .work-row.current .ev { font-weight: 500; color: var(--accent); }
+    .scroll-hint { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-family: var(--mono); font-size: 10px; color: var(--ink-lt); }
+    .pr-box { background: var(--surface); border: 1px solid var(--border); padding: 24px 28px; font-size: 14px; line-height: 2; }
+    .pr-box p + p { margin-top: 12px; }
+    .pr-box .tag { display: inline-block; font-family: var(--mono); font-size: 11px; padding: 2px 8px; border: 1px solid var(--border); color: var(--ink-mid); margin-right: 6px; margin-bottom: 4px; border-radius: 2px; }
+    .tags { margin-top: 16px; }
+    footer { text-align: center; padding: 32px 0; font-family: var(--mono); font-size: 10px; color: var(--ink-lt); border-top: 1px solid var(--border-lt); margin-top: 40px; }
+    @media print { .page-header { display: none; } .work-scroll-body { max-height: none; overflow: visible; } .scroll-hint, .lock-panel { display: none; } }
+    @media (max-width: 600px) { .name-block { grid-template-columns: 1fr; } .photo-placeholder { display: none; } .name-ja { font-size: 32px; } }
+  </style>
+</head>
+<body>
+
+<header class="page-header">
+  <span class="label">履　歴　書</span>
+  <span class="date">2024年9月10日現在</span>
+</header>
+
+<main class="container">
+
+  <div class="name-block">
+    <div>
+      <p class="furigana">おざわ　しろう</p>
+      <h1 class="name-ja">小澤　史朗</h1>
+      <p class="birth-info">1972年10月10日生（満51歳）&nbsp;&nbsp;本籍：山梨県</p>
+    </div>
+    <div class="photo-placeholder">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#c8b89a" stroke-width="1">
+        <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+      </svg>
+      <span>写真欄</span>
+    </div>
+  </div>
+
+  <section class="section">
+    <h2 class="section-title">Contact</h2>
+    <div class="contact-grid">
+      <div class="contact-item">
+        <span class="key">GitHub</span>
+        <span class="val"><a href="https://github.com/striderkein" target="_blank" rel="noopener">github.com/striderkein</a></span>
+      </div>
+    </div>
+    <div class="locked-area">
+      <div class="lock-panel" id="lock-panel">
+        <div class="lock-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="11" width="18" height="11" rx="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+        </div>
+        <p class="lock-label">住所・電話・メールはパスワードで保護されています</p>
+        <div class="pw-form">
+          <input type="password" id="pw-input" placeholder="パスワードを入力" autocomplete="off">
+          <button id="pw-btn" onclick="unlockContact()">解錠</button>
+        </div>
+        <p class="pw-error" id="pw-error">パスワードが正しくありません</p>
+      </div>
+      <div class="contact-grid" id="unlocked-grid" style="display:none;">
+        <div class="contact-item">
+          <span class="key">現住所</span>
+          <span class="val" id="out-address"></span>
+        </div>
+        <div class="contact-item">
+          <span class="key">携帯電話</span>
+          <span class="val" id="out-phone"></span>
+        </div>
+        <div class="contact-item">
+          <span class="key">E-Mail</span>
+          <span class="val" id="out-email"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Education — 学歴</h2>
+    <table class="hist-table">
+      <thead><tr><th>年月</th><th>内容</th></tr></thead>
+      <tbody>
+        <tr><td class="ym">1988.04</td><td>山梨県立甲府東高等学校　入学</td></tr>
+        <tr><td class="ym">1991.03</td><td>山梨県立甲府東高等学校　卒業</td></tr>
+        <tr><td class="ym">1991.04</td><td>山梨大学　教育学部　教育科学科　入学</td></tr>
+        <tr><td class="ym">1995.03</td><td>山梨大学　教育学部　教育科学科　卒業</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Work History — 職歴</h2>
+    <div class="work-scroll-wrapper">
+      <div class="work-scroll-header">
+        <span>年月</span><span>内容</span>
+      </div>
+      <div class="work-scroll-body">
+        <div class="work-row"><span class="ym">1995.04</span><span class="ev">期間採用教員等として不定期勤務（山梨県）</span></div>
+        <div class="work-row"><span class="ym">1999.03</span><span class="ev">期間満了により退職</span></div>
+        <div class="work-row"><span class="ym">1999.04</span><span class="ev">県採用教職員として勤務</span></div>
+        <div class="work-row"><span class="ym">2000.03</span><span class="ev">一身上の都合により退職</span></div>
+        <div class="work-row"><span class="ym">2002.07</span><span class="ev">有限会社ナンバーフォー　入社</span></div>
+        <div class="work-row"><span class="ym">2003.01</span><span class="ev">一身上の都合により退職</span></div>
+        <div class="work-row"><span class="ym">2003.02</span><span class="ev">株式会社ヤマト運輸　入社</span></div>
+        <div class="work-row"><span class="ym">2005.02</span><span class="ev">一身上の都合により退職</span></div>
+        <div class="work-row"><span class="ym">2005.02</span><span class="ev">司法書士試験受験のため在宅（〜2007年7月）</span></div>
+        <div class="work-row"><span class="ym">2007.11</span><span class="ev">株式会社アデコ　人材登録（派遣先：NTT東日本）</span></div>
+        <div class="work-row"><span class="ym">2009.04</span><span class="ev">契約期間満了につき退職</span></div>
+        <div class="work-row"><span class="ym">2010.04</span><span class="ev">期間採用教員として山梨県採用</span></div>
+        <div class="work-row"><span class="ym">2011.03</span><span class="ev">任用期間満了につき退職</span></div>
+        <div class="work-row"><span class="ym">2011.10</span><span class="ev">有限会社フロンティア　入社</span></div>
+        <div class="work-row"><span class="ym">2012.03</span><span class="ev">会社都合により解雇</span></div>
+        <div class="work-row"><span class="ym">2012.10</span><span class="ev">有限会社プレザントとの業務請負契約締結</span></div>
+        <div class="work-row"><span class="ym">2013.02</span><span class="ev">業務請負契約終了</span></div>
+        <div class="work-row"><span class="ym">2013.03</span><span class="ev">株式会社デルタウイング　入社</span></div>
+        <div class="work-row"><span class="ym">2017.09</span><span class="ev">一身上の都合により退職</span></div>
+        <div class="work-row"><span class="ym">2017.10</span><span class="ev">光英システム株式会社　入社</span></div>
+        <div class="work-row"><span class="ym">2019.02</span><span class="ev">一身上の都合により退職</span></div>
+        <div class="work-row"><span class="ym">2019.03</span><span class="ev">株式会社ムロドー　入社</span></div>
+        <div class="work-row"><span class="ym">2019.12</span><span class="ev">会社倒産のため退職</span></div>
+        <div class="work-row"><span class="ym">2019.12</span><span class="ev">株式会社システムアイ　入社</span></div>
+        <div class="work-row"><span class="ym">2020.12</span><span class="ev">一身上の都合により退職</span></div>
+        <div class="work-row"><span class="ym">2021.02</span><span class="ev">株式会社グッドワークス　入社</span></div>
+        <div class="work-row"><span class="ym">2021.12</span><span class="ev">一身上の都合により退職</span></div>
+        <div class="work-row"><span class="ym">2022.01</span><span class="ev">2nd community株式会社　入社</span></div>
+        <div class="work-row"><span class="ym">2022.07</span><span class="ev">一身上の都合により退職</span></div>
+        <div class="work-row"><span class="ym">2022.08</span><span class="ev">株式会社ゼヒトモ　入社</span></div>
+        <div class="work-row"><span class="ym">2023.08</span><span class="ev">会社の業績悪化に伴う希望退職</span></div>
+        <div class="work-row current"><span class="ym">2024.02</span><span class="ev">サーバーフリー株式会社　入社（現職）</span></div>
+      </div>
+    </div>
+    <p class="scroll-hint">↕ スクロールして全職歴を確認できます</p>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Licenses &amp; Qualifications — 免許・資格</h2>
+    <table class="hist-table">
+      <thead><tr><th>年月</th><th>内容</th></tr></thead>
+      <tbody>
+        <tr><td class="ym">1992.06</td><td>普通自動車第一種免許　取得</td></tr>
+        <tr><td class="ym">1995.03</td><td>小学校教員第一種免許　取得</td></tr>
+        <tr><td class="ym">2010.01</td><td>WEBクリエイター上級（株式会社サーティファイ実施）取得</td></tr>
+        <tr><td class="ym">2011.10</td><td>経済産業省　基本情報技術者試験　合格</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Self PR — 自己PR</h2>
+    <div class="pr-box">
+      <p>React / TypeScript を得意とし、フロントエンド開発を中心に実務経験を積んできました。エディタは Vim、キーボードは US 配列派で、コマンドライン環境を好みます。</p>
+      <p>AWS においては Amazon Cognito と AWS SAM に詳しく、サーバーレスアーキテクチャの設計・実装が可能です。</p>
+      <div class="tags">
+        <span class="tag">React</span>
+        <span class="tag">TypeScript</span>
+        <span class="tag">Vim</span>
+        <span class="tag">AWS SAM</span>
+        <span class="tag">Amazon Cognito</span>
+        <span class="tag">US配列</span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  履歴書 — 小澤史朗 &nbsp;|&nbsp; 2024年9月10日現在
+</footer>
+
+<script>
+// ----------------------------------------------------------------
+// 暗号化済みペイロード
+// encrypt-tool.html で生成した文字列をここに貼り付けてください
+// ----------------------------------------------------------------
+const ENCRYPTED_PAYLOAD = "PASTE_ENCRYPTED_PAYLOAD_HERE";
+// ----------------------------------------------------------------
+
+async function unlockContact() {
+  const password = document.getElementById('pw-input').value;
+  const errEl    = document.getElementById('pw-error');
+  const btn      = document.getElementById('pw-btn');
+
+  errEl.style.display = 'none';
+  btn.textContent = '...';
+  btn.disabled = true;
+
+  try {
+    const parts = ENCRYPTED_PAYLOAD.split(':');
+    if (parts.length !== 3) throw new Error('invalid payload');
+
+    const fromB64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+    const salt       = fromB64(parts[0]);
+    const iv         = fromB64(parts[1]);
+    const ciphertext = fromB64(parts[2]);
+
+    const keyMaterial = await crypto.subtle.importKey(
+      'raw', new TextEncoder().encode(password),
+      'PBKDF2', false, ['deriveKey']
+    );
+    const key = await crypto.subtle.deriveKey(
+      { name: 'PBKDF2', salt, iterations: 200000, hash: 'SHA-256' },
+      keyMaterial,
+      { name: 'AES-GCM', length: 256 },
+      false, ['decrypt']
+    );
+
+    const plainBuf = await crypto.subtle.decrypt(
+      { name: 'AES-GCM', iv }, key, ciphertext
+    );
+    const data = JSON.parse(new TextDecoder().decode(plainBuf));
+
+    document.getElementById('out-address').innerHTML =
+      data.address.replace(/\n/g, '<br>');
+    document.getElementById('out-phone').textContent = data.phone;
+    document.getElementById('out-email').innerHTML =
+      '<a href="mailto:' + data.email + '">' + data.email + '</a>';
+
+    document.getElementById('lock-panel').style.display    = 'none';
+    document.getElementById('unlocked-grid').style.display = '';
+
+  } catch (_) {
+    errEl.style.display = 'block';
+    btn.textContent = '解錠';
+    btn.disabled = false;
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('pw-input')
+    .addEventListener('keydown', e => { if (e.key === 'Enter') unlockContact(); });
+});
+</script>
+
+</body>
 </html>
