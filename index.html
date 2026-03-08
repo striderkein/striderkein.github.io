@@ -247,6 +247,7 @@ const ENCRYPTED_PAYLOAD = "2W6+uUFZAuHaHhmME529TQ==:qRoDKpACkco0jXfT:OPvvJFTjwWM
 // ----------------------------------------------------------------
 
 let currentLang = 'ja';
+let decryptedData = null;
 
 const META = {
   title: { ja: '履歴書 — 小澤史朗', en: 'Resume — Shiro Ozawa' },
@@ -289,6 +290,9 @@ function applyLang(lang) {
   // トグルボタン
   document.getElementById('lang-toggle').textContent = lang === 'ja' ? 'EN' : 'JA';
 
+  // 復号済み連絡先の再描画
+  if (decryptedData) renderContact(decryptedData, lang);
+
   // persist
   localStorage.setItem('cv-lang', lang);
   history.replaceState(null, '', lang === 'en' ? '#en' : window.location.pathname);
@@ -296,6 +300,14 @@ function applyLang(lang) {
 
 function toggleLang() {
   applyLang(currentLang === 'ja' ? 'en' : 'ja');
+}
+
+function renderContact(data, lang) {
+  const addr = (lang === 'en' && data.address_en) ? data.address_en : data.address;
+  document.getElementById('out-address').innerHTML = addr.replace(/\n/g, '<br>');
+  document.getElementById('out-phone').textContent = data.phone;
+  document.getElementById('out-email').innerHTML =
+    '<a href="mailto:' + data.email + '">' + data.email + '</a>';
 }
 
 async function unlockContact() {
@@ -330,14 +342,9 @@ async function unlockContact() {
     const plainBuf = await crypto.subtle.decrypt(
       { name: 'AES-GCM', iv }, key, ciphertext
     );
-    const data = JSON.parse(new TextDecoder().decode(plainBuf));
+    decryptedData = JSON.parse(new TextDecoder().decode(plainBuf));
 
-    document.getElementById('out-address').innerHTML =
-      data.address.replace(/\n/g, '<br>');
-    document.getElementById('out-phone').textContent = data.phone;
-    document.getElementById('out-email').innerHTML =
-      '<a href="mailto:' + data.email + '">' + data.email + '</a>';
-
+    renderContact(decryptedData, currentLang);
     document.getElementById('lock-panel').style.display    = 'none';
     document.getElementById('unlocked-grid').style.display = '';
 
