@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>履歴書 — 小澤史朗</title>
+  <meta name="description" content="小澤史朗の履歴書">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
@@ -77,6 +78,9 @@
     .pr-box .tag { display: inline-block; font-family: var(--mono); font-size: 11px; padding: 2px 8px; border: 1px solid var(--border); color: var(--ink-mid); margin-right: 6px; margin-bottom: 4px; border-radius: 2px; }
     .tags { margin-top: 16px; }
     footer { text-align: center; padding: 32px 0; font-family: var(--mono); font-size: 10px; color: var(--ink-lt); border-top: 1px solid var(--border-lt); margin-top: 40px; }
+    .furigana:empty { display: none; }
+    #lang-toggle { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--border); background: transparent; border: 1px solid var(--ink-lt); padding: 4px 12px; cursor: pointer; transition: background 0.15s, color 0.15s; }
+    #lang-toggle:hover { background: var(--ink-lt); color: var(--bg); }
     @media print { .page-header { display: none; } .work-scroll-body { max-height: none; overflow: visible; } .scroll-hint, .lock-panel { display: none; } }
     @media (max-width: 600px) { .name-block { grid-template-columns: 1fr; } .photo-placeholder { display: none; } .name-ja { font-size: 32px; } }
   </style>
@@ -84,19 +88,20 @@
 <body>
 
 <header class="page-header">
-  <span class="label">履　歴　書</span>
-  <span class="date">2026年3月1日現在</span>
+  <span class="label" data-en="Resume">履　歴　書</span>
+  <span class="date" data-en="As of March 1, 2026">2026年3月1日現在</span>
+  <button id="lang-toggle" onclick="toggleLang()">EN</button>
 </header>
 
 <main class="container">
 
   <div class="name-block">
     <div>
-      <p class="furigana">おざわ　しろう</p>
-      <h1 class="name-ja">小澤　史朗</h1>
-      <p class="birth-info">1972年10月10日生（満53歳）&nbsp;&nbsp;本籍：山梨県</p>
+      <p class="furigana" data-en="">おざわ　しろう</p>
+      <h1 class="name-ja" data-en="Shiro Ozawa">小澤　史朗</h1>
+      <p class="birth-info" data-en="Born October 10, 1972 (Age 53)&nbsp;&nbsp;Domicile: Yamanashi, Japan">1972年10月10日生（満53歳）&nbsp;&nbsp;本籍：山梨県</p>
     </div>
-    <img src="images/striderkein.jpg" alt="小澤史朗" style="width:100px;height:130px;object-fit:cover;border:1px solid var(--border);">
+    <img src="images/striderkein.jpg" alt="小澤史朗" data-en-alt="Shiro Ozawa" style="width:100px;height:130px;object-fit:cover;border:1px solid var(--border);">
   </div>
 
   <section class="section">
@@ -115,20 +120,20 @@
             <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
           </svg>
         </div>
-        <p class="lock-label">住所・電話・メールはパスワードで保護されています</p>
+        <p class="lock-label" data-en="Address, phone, and email are password-protected">住所・電話・メールはパスワードで保護されています</p>
         <div class="pw-form">
-          <input type="password" id="pw-input" placeholder="パスワードを入力" autocomplete="off">
-          <button id="pw-btn" onclick="unlockContact()">解錠</button>
+          <input type="password" id="pw-input" placeholder="パスワードを入力" data-en-placeholder="Enter password" autocomplete="off">
+          <button id="pw-btn" onclick="unlockContact()" data-en="Unlock">解錠</button>
         </div>
-        <p class="pw-error" id="pw-error">パスワードが正しくありません</p>
+        <p class="pw-error" id="pw-error" data-en="Incorrect password">パスワードが正しくありません</p>
       </div>
       <div class="contact-grid" id="unlocked-grid" style="display:none;">
         <div class="contact-item">
-          <span class="key">現住所</span>
+          <span class="key" data-en="Address">現住所</span>
           <span class="val" id="out-address"></span>
         </div>
         <div class="contact-item">
-          <span class="key">携帯電話</span>
+          <span class="key" data-en="Phone">携帯電話</span>
           <span class="val" id="out-phone"></span>
         </div>
         <div class="contact-item">
@@ -140,96 +145,96 @@
   </section>
 
   <section class="section">
-    <h2 class="section-title">Education — 学歴</h2>
+    <h2 class="section-title" data-en="Education">Education — 学歴</h2>
     <table class="hist-table">
-      <thead><tr><th>年月</th><th>内容</th></tr></thead>
+      <thead><tr><th data-en="Date">年月</th><th data-en="Details">内容</th></tr></thead>
       <tbody>
-        <tr><td class="ym">1988.04</td><td>山梨県立甲府東高等学校　入学</td></tr>
-        <tr><td class="ym">1991.03</td><td>山梨県立甲府東高等学校　卒業</td></tr>
-        <tr><td class="ym">1991.04</td><td>山梨大学　教育学部　教育科学科　入学</td></tr>
-        <tr><td class="ym">1995.03</td><td>山梨大学　教育学部　教育科学科　卒業</td></tr>
+        <tr><td class="ym">1988.04</td><td data-en="Enrolled in Yamanashi Prefectural Kofu-Higashi High School">山梨県立甲府東高等学校　入学</td></tr>
+        <tr><td class="ym">1991.03</td><td data-en="Graduated from Yamanashi Prefectural Kofu-Higashi High School">山梨県立甲府東高等学校　卒業</td></tr>
+        <tr><td class="ym">1991.04</td><td data-en="Enrolled in University of Yamanashi, Faculty of Education, Dept. of Educational Science">山梨大学　教育学部　教育科学科　入学</td></tr>
+        <tr><td class="ym">1995.03</td><td data-en="Graduated from University of Yamanashi, Faculty of Education, Dept. of Educational Science">山梨大学　教育学部　教育科学科　卒業</td></tr>
       </tbody>
     </table>
   </section>
 
   <section class="section">
-    <h2 class="section-title">Work History — 職歴</h2>
+    <h2 class="section-title" data-en="Work History">Work History — 職歴</h2>
     <div class="work-scroll-wrapper">
       <div class="work-scroll-header">
-        <span>年月</span><span>内容</span>
+        <span data-en="Date">年月</span><span data-en="Details">内容</span>
       </div>
       <div class="work-scroll-body">
-        <div class="work-row"><span class="ym">1995.04</span><span class="ev">期間採用教員等として不定期勤務（山梨県）</span></div>
-        <div class="work-row"><span class="ym">1999.03</span><span class="ev">期間満了により退職</span></div>
-        <div class="work-row"><span class="ym">1999.04</span><span class="ev">県採用教職員として勤務</span></div>
-        <div class="work-row"><span class="ym">2000.03</span><span class="ev">一身上の都合により退職</span></div>
-        <div class="work-row"><span class="ym">2002.07</span><span class="ev">有限会社ナンバーフォー　入社</span></div>
-        <div class="work-row"><span class="ym">2003.01</span><span class="ev">一身上の都合により退職</span></div>
-        <div class="work-row"><span class="ym">2003.02</span><span class="ev">株式会社ヤマト運輸　入社</span></div>
-        <div class="work-row"><span class="ym">2005.02</span><span class="ev">一身上の都合により退職</span></div>
-        <div class="work-row"><span class="ym">2005.02</span><span class="ev">司法書士試験受験のため在宅（〜2007年7月）</span></div>
-        <div class="work-row"><span class="ym">2007.11</span><span class="ev">株式会社アデコ　人材登録（派遣先：NTT東日本）</span></div>
-        <div class="work-row"><span class="ym">2009.04</span><span class="ev">契約期間満了につき退職</span></div>
-        <div class="work-row"><span class="ym">2010.04</span><span class="ev">期間採用教員として山梨県採用</span></div>
-        <div class="work-row"><span class="ym">2011.03</span><span class="ev">任用期間満了につき退職</span></div>
-        <div class="work-row"><span class="ym">2011.10</span><span class="ev">有限会社フロンティア　入社</span></div>
-        <div class="work-row"><span class="ym">2012.03</span><span class="ev">会社都合により解雇</span></div>
-        <div class="work-row"><span class="ym">2012.10</span><span class="ev">有限会社プレザントとの業務請負契約締結</span></div>
-        <div class="work-row"><span class="ym">2013.02</span><span class="ev">業務請負契約終了</span></div>
-        <div class="work-row"><span class="ym">2013.03</span><span class="ev">株式会社デルタウイング　入社</span></div>
-        <div class="work-row"><span class="ym">2017.09</span><span class="ev">一身上の都合により退職</span></div>
-        <div class="work-row"><span class="ym">2017.10</span><span class="ev">光英システム株式会社　入社</span></div>
-        <div class="work-row"><span class="ym">2019.02</span><span class="ev">一身上の都合により退職</span></div>
-        <div class="work-row"><span class="ym">2019.03</span><span class="ev">株式会社ムロドー　入社</span></div>
-        <div class="work-row"><span class="ym">2019.12</span><span class="ev">会社倒産のため退職</span></div>
-        <div class="work-row"><span class="ym">2019.12</span><span class="ev">株式会社システムアイ　入社</span></div>
-        <div class="work-row"><span class="ym">2020.12</span><span class="ev">一身上の都合により退職</span></div>
-        <div class="work-row"><span class="ym">2021.02</span><span class="ev">株式会社グッドワークス　入社</span></div>
-        <div class="work-row"><span class="ym">2021.12</span><span class="ev">一身上の都合により退職</span></div>
-        <div class="work-row"><span class="ym">2022.01</span><span class="ev">2nd community株式会社　入社</span></div>
-        <div class="work-row"><span class="ym">2022.07</span><span class="ev">一身上の都合により退職</span></div>
-        <div class="work-row"><span class="ym">2022.08</span><span class="ev">株式会社ゼヒトモ　入社</span></div>
-        <div class="work-row"><span class="ym">2023.08</span><span class="ev">会社の業績悪化に伴う希望退職</span></div>
-        <div class="work-row"><span class="ym">2024.02</span><span class="ev">サーバーフリー株式会社　入社</span></div>
-        <div class="work-row"><span class="ym">2025.11</span><span class="ev">一身上の都合により退職</span></div>
-        <div class="work-row current"><span class="ym">2026.01</span><span class="ev">株式会社シマント　入社（現職）</span></div>
+        <div class="work-row"><span class="ym">1995.04</span><span class="ev" data-en="Worked as a fixed-term teacher (Yamanashi Prefecture)">期間採用教員等として不定期勤務（山梨県）</span></div>
+        <div class="work-row"><span class="ym">1999.03</span><span class="ev" data-en="Left upon contract expiration">期間満了により退職</span></div>
+        <div class="work-row"><span class="ym">1999.04</span><span class="ev" data-en="Employed as a prefectural teacher">県採用教職員として勤務</span></div>
+        <div class="work-row"><span class="ym">2000.03</span><span class="ev" data-en="Resigned for personal reasons">一身上の都合により退職</span></div>
+        <div class="work-row"><span class="ym">2002.07</span><span class="ev" data-en="Joined Number Four Co., Ltd.">有限会社ナンバーフォー　入社</span></div>
+        <div class="work-row"><span class="ym">2003.01</span><span class="ev" data-en="Resigned for personal reasons">一身上の都合により退職</span></div>
+        <div class="work-row"><span class="ym">2003.02</span><span class="ev" data-en="Joined Yamato Transport Co., Ltd.">株式会社ヤマト運輸　入社</span></div>
+        <div class="work-row"><span class="ym">2005.02</span><span class="ev" data-en="Resigned for personal reasons">一身上の都合により退職</span></div>
+        <div class="work-row"><span class="ym">2005.02</span><span class="ev" data-en="Studied for judicial scrivener exam (until Jul 2007)">司法書士試験受験のため在宅（〜2007年7月）</span></div>
+        <div class="work-row"><span class="ym">2007.11</span><span class="ev" data-en="Registered with Adecco Ltd. (Dispatched to NTT East)">株式会社アデコ　人材登録（派遣先：NTT東日本）</span></div>
+        <div class="work-row"><span class="ym">2009.04</span><span class="ev" data-en="Left upon contract expiration">契約期間満了につき退職</span></div>
+        <div class="work-row"><span class="ym">2010.04</span><span class="ev" data-en="Hired as a fixed-term teacher by Yamanashi Prefecture">期間採用教員として山梨県採用</span></div>
+        <div class="work-row"><span class="ym">2011.03</span><span class="ev" data-en="Left upon term expiration">任用期間満了につき退職</span></div>
+        <div class="work-row"><span class="ym">2011.10</span><span class="ev" data-en="Joined Frontier Co., Ltd.">有限会社フロンティア　入社</span></div>
+        <div class="work-row"><span class="ym">2012.03</span><span class="ev" data-en="Terminated due to company circumstances">会社都合により解雇</span></div>
+        <div class="work-row"><span class="ym">2012.10</span><span class="ev" data-en="Contracted with Pleasant Co., Ltd.">有限会社プレザントとの業務請負契約締結</span></div>
+        <div class="work-row"><span class="ym">2013.02</span><span class="ev" data-en="Contract ended">業務請負契約終了</span></div>
+        <div class="work-row"><span class="ym">2013.03</span><span class="ev" data-en="Joined Delta Wing Co., Ltd.">株式会社デルタウイング　入社</span></div>
+        <div class="work-row"><span class="ym">2017.09</span><span class="ev" data-en="Resigned for personal reasons">一身上の都合により退職</span></div>
+        <div class="work-row"><span class="ym">2017.10</span><span class="ev" data-en="Joined Koei System Co., Ltd.">光英システム株式会社　入社</span></div>
+        <div class="work-row"><span class="ym">2019.02</span><span class="ev" data-en="Resigned for personal reasons">一身上の都合により退職</span></div>
+        <div class="work-row"><span class="ym">2019.03</span><span class="ev" data-en="Joined Murodo Co., Ltd.">株式会社ムロドー　入社</span></div>
+        <div class="work-row"><span class="ym">2019.12</span><span class="ev" data-en="Left due to company bankruptcy">会社倒産のため退職</span></div>
+        <div class="work-row"><span class="ym">2019.12</span><span class="ev" data-en="Joined System-i Co., Ltd.">株式会社システムアイ　入社</span></div>
+        <div class="work-row"><span class="ym">2020.12</span><span class="ev" data-en="Resigned for personal reasons">一身上の都合により退職</span></div>
+        <div class="work-row"><span class="ym">2021.02</span><span class="ev" data-en="Joined Goodworks Co., Ltd.">株式会社グッドワークス　入社</span></div>
+        <div class="work-row"><span class="ym">2021.12</span><span class="ev" data-en="Resigned for personal reasons">一身上の都合により退職</span></div>
+        <div class="work-row"><span class="ym">2022.01</span><span class="ev" data-en="Joined 2nd Community Co., Ltd.">2nd community株式会社　入社</span></div>
+        <div class="work-row"><span class="ym">2022.07</span><span class="ev" data-en="Resigned for personal reasons">一身上の都合により退職</span></div>
+        <div class="work-row"><span class="ym">2022.08</span><span class="ev" data-en="Joined Zehitomo, Inc.">株式会社ゼヒトモ　入社</span></div>
+        <div class="work-row"><span class="ym">2023.08</span><span class="ev" data-en="Voluntary retirement due to company downturn">会社の業績悪化に伴う希望退職</span></div>
+        <div class="work-row"><span class="ym">2024.02</span><span class="ev" data-en="Joined Serverfree Co., Ltd.">サーバーフリー株式会社　入社</span></div>
+        <div class="work-row"><span class="ym">2025.11</span><span class="ev" data-en="Resigned for personal reasons">一身上の都合により退職</span></div>
+        <div class="work-row current"><span class="ym">2026.01</span><span class="ev" data-en="Joined Shimanto Co., Ltd. (Current)">株式会社シマント　入社（現職）</span></div>
       </div>
     </div>
-    <p class="scroll-hint">↕ スクロールして全職歴を確認できます</p>
+    <p class="scroll-hint" data-en="↕ Scroll to view full work history">↕ スクロールして全職歴を確認できます</p>
   </section>
 
   <section class="section">
-    <h2 class="section-title">Licenses &amp; Qualifications — 免許・資格</h2>
+    <h2 class="section-title" data-en="Licenses &amp; Qualifications">Licenses &amp; Qualifications — 免許・資格</h2>
     <table class="hist-table">
-      <thead><tr><th>年月</th><th>内容</th></tr></thead>
+      <thead><tr><th data-en="Date">年月</th><th data-en="Details">内容</th></tr></thead>
       <tbody>
-        <tr><td class="ym">1992.06</td><td>普通自動車第一種免許　取得</td></tr>
-        <tr><td class="ym">1995.03</td><td>小学校教員第一種免許　取得</td></tr>
-        <tr><td class="ym">2010.01</td><td>WEBクリエイター上級（株式会社サーティファイ実施）取得</td></tr>
-        <tr><td class="ym">2011.10</td><td>経済産業省　基本情報技術者試験　合格</td></tr>
+        <tr><td class="ym">1992.06</td><td data-en="Ordinary Motor Vehicle License (Class 1)">普通自動車第一種免許　取得</td></tr>
+        <tr><td class="ym">1995.03</td><td data-en="Elementary School Teacher License (Class 1)">小学校教員第一種免許　取得</td></tr>
+        <tr><td class="ym">2010.01</td><td data-en="Web Creator Advanced Certificate (Certify Inc.)">WEBクリエイター上級（株式会社サーティファイ実施）取得</td></tr>
+        <tr><td class="ym">2011.10</td><td data-en="METI Fundamental Information Technology Engineer Examination — Passed">経済産業省　基本情報技術者試験　合格</td></tr>
       </tbody>
     </table>
   </section>
 
   <section class="section">
-    <h2 class="section-title">Self PR — 自己PR</h2>
+    <h2 class="section-title" data-en="Self PR">Self PR — 自己PR</h2>
     <div class="pr-box">
-      <p>React / TypeScript を得意とし、フロントエンド開発を中心に実務経験を積んできました。エディタは Vim、キーボードは US 配列派で、コマンドライン環境を好みます。</p>
-      <p>AWS においては Amazon Cognito と AWS SAM に詳しく、サーバーレスアーキテクチャの設計・実装が可能です。</p>
+      <p data-en="Specializing in React / TypeScript with extensive hands-on experience in frontend development. I prefer Vim as my editor, US keyboard layout, and a command-line-driven workflow.">React / TypeScript を得意とし、フロントエンド開発を中心に実務経験を積んできました。エディタは Vim、キーボードは US 配列派で、コマンドライン環境を好みます。</p>
+      <p data-en="On AWS, I have deep expertise in Amazon Cognito and AWS SAM, capable of designing and implementing serverless architectures.">AWS においては Amazon Cognito と AWS SAM に詳しく、サーバーレスアーキテクチャの設計・実装が可能です。</p>
       <div class="tags">
         <span class="tag">React</span>
         <span class="tag">TypeScript</span>
         <span class="tag">Vim</span>
         <span class="tag">AWS SAM</span>
         <span class="tag">Amazon Cognito</span>
-        <span class="tag">US配列</span>
+        <span class="tag" data-en="US Layout">US配列</span>
       </div>
     </div>
   </section>
 
 </main>
 
-<footer>
+<footer data-en="Resume — Shiro Ozawa &nbsp;|&nbsp; As of September 10, 2024">
   履歴書 — 小澤史朗 &nbsp;|&nbsp; 2024年9月10日現在
 </footer>
 
@@ -240,6 +245,58 @@
 // ----------------------------------------------------------------
 const ENCRYPTED_PAYLOAD = "2W6+uUFZAuHaHhmME529TQ==:qRoDKpACkco0jXfT:OPvvJFTjwWMKIvuB9oRVr1XDkos8QzEHj6RlSTjg9/uvG1+bv8m17P4NXXII5LIUtPnGgd9D73g8FADGSBEskCEunec8wQSqxqfRAfDrNkxxkiD4e4DWn/jHNTO0eqB3AM08q2q85SA0eSDRgZsRkOI6Yj8aJnYAvJ092IWCukbAzg7rkcjS7l2eatjHgAmXOkzgsEnJbN5ysoi0DX4S/XKVToz23izDFugl9sz9";
 // ----------------------------------------------------------------
+
+let currentLang = 'ja';
+
+const META = {
+  title: { ja: '履歴書 — 小澤史朗', en: 'Resume — Shiro Ozawa' },
+  description: { ja: '小澤史朗の履歴書', en: 'Resume of Shiro Ozawa' }
+};
+
+function applyLang(lang) {
+  currentLang = lang;
+
+  // html lang, title, meta description
+  document.documentElement.lang = lang;
+  document.title = META.title[lang];
+  document.querySelector('meta[name="description"]').content = META.description[lang];
+
+  // data-en 属性を持つ全要素のテキストを切替
+  document.querySelectorAll('[data-en]').forEach(el => {
+    // 初回呼び出し時に日本語テキストを保存
+    if (!el.hasAttribute('data-ja')) {
+      el.setAttribute('data-ja', el.innerHTML);
+    }
+    el.innerHTML = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-ja');
+  });
+
+  // data-en-alt (img alt属性)
+  document.querySelectorAll('[data-en-alt]').forEach(el => {
+    if (!el.hasAttribute('data-ja-alt')) {
+      el.setAttribute('data-ja-alt', el.alt);
+    }
+    el.alt = lang === 'en' ? el.getAttribute('data-en-alt') : el.getAttribute('data-ja-alt');
+  });
+
+  // data-en-placeholder (input placeholder属性)
+  document.querySelectorAll('[data-en-placeholder]').forEach(el => {
+    if (!el.hasAttribute('data-ja-placeholder')) {
+      el.setAttribute('data-ja-placeholder', el.placeholder);
+    }
+    el.placeholder = lang === 'en' ? el.getAttribute('data-en-placeholder') : el.getAttribute('data-ja-placeholder');
+  });
+
+  // トグルボタン
+  document.getElementById('lang-toggle').textContent = lang === 'ja' ? 'EN' : 'JA';
+
+  // persist
+  localStorage.setItem('cv-lang', lang);
+  history.replaceState(null, '', lang === 'en' ? '#en' : window.location.pathname);
+}
+
+function toggleLang() {
+  applyLang(currentLang === 'ja' ? 'en' : 'ja');
+}
 
 async function unlockContact() {
   const password = document.getElementById('pw-input').value;
@@ -286,7 +343,7 @@ async function unlockContact() {
 
   } catch (_) {
     errEl.style.display = 'block';
-    btn.textContent = '解錠';
+    btn.textContent = currentLang === 'en' ? 'Unlock' : '解錠';
     btn.disabled = false;
   }
 }
@@ -294,6 +351,16 @@ async function unlockContact() {
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('pw-input')
     .addEventListener('keydown', e => { if (e.key === 'Enter') unlockContact(); });
+
+  // 初期言語: URL hash > localStorage > default (ja)
+  let lang = 'ja';
+  if (window.location.hash === '#en') {
+    lang = 'en';
+  } else {
+    const stored = localStorage.getItem('cv-lang');
+    if (stored === 'en') lang = 'en';
+  }
+  if (lang !== 'ja') applyLang(lang);
 });
 </script>
 
