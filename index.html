@@ -247,6 +247,58 @@ const ENCRYPTED_PAYLOAD = "2W6+uUFZAuHaHhmME529TQ==:qRoDKpACkco0jXfT:OPvvJFTjwWM
 
 let currentLang = 'ja';
 
+// 共通データ（言語非依存）
+const tableData = {
+  education: [
+    { ym: '1988.04' },
+    { ym: '1991.03' },
+    { ym: '1991.04' },
+    { ym: '1995.03' }
+  ],
+  work: [
+    { ym: '1995.04' },
+    { ym: '1999.03' },
+    { ym: '1999.04' },
+    { ym: '2000.03' },
+    { ym: '2002.07' },
+    { ym: '2003.01' },
+    { ym: '2003.02' },
+    { ym: '2005.02' },
+    { ym: '2005.02' },
+    { ym: '2007.11' },
+    { ym: '2009.04' },
+    { ym: '2010.04' },
+    { ym: '2011.03' },
+    { ym: '2011.10' },
+    { ym: '2012.03' },
+    { ym: '2012.10' },
+    { ym: '2013.02' },
+    { ym: '2013.03' },
+    { ym: '2017.09' },
+    { ym: '2017.10' },
+    { ym: '2019.02' },
+    { ym: '2019.03' },
+    { ym: '2019.12' },
+    { ym: '2019.12' },
+    { ym: '2020.12' },
+    { ym: '2021.02' },
+    { ym: '2021.12' },
+    { ym: '2022.01' },
+    { ym: '2022.07' },
+    { ym: '2022.08' },
+    { ym: '2023.08' },
+    { ym: '2024.02' },
+    { ym: '2025.11' },
+    { ym: '2026.01', current: true }
+  ],
+  licenses: [
+    { ym: '1992.06' },
+    { ym: '1995.03' },
+    { ym: '2010.01' },
+    { ym: '2011.10' }
+  ]
+};
+
 const i18n = {
   ja: {
     title: '履歴書 — 小澤史朗',
@@ -274,52 +326,52 @@ const i18n = {
     scrollHint: '↕ スクロールして全職歴を確認できます',
     footer: '履歴書 — 小澤史朗 \u00a0|\u00a0 2024年9月10日現在',
     education: [
-      { ym: '1988.04', text: '山梨県立甲府東高等学校　入学' },
-      { ym: '1991.03', text: '山梨県立甲府東高等学校　卒業' },
-      { ym: '1991.04', text: '山梨大学　教育学部　教育科学科　入学' },
-      { ym: '1995.03', text: '山梨大学　教育学部　教育科学科　卒業' }
+      '山梨県立甲府東高等学校　入学',
+      '山梨県立甲府東高等学校　卒業',
+      '山梨大学　教育学部　教育科学科　入学',
+      '山梨大学　教育学部　教育科学科　卒業'
     ],
     work: [
-      { ym: '1995.04', text: '期間採用教員等として不定期勤務（山梨県）' },
-      { ym: '1999.03', text: '期間満了により退職' },
-      { ym: '1999.04', text: '県採用教職員として勤務' },
-      { ym: '2000.03', text: '一身上の都合により退職' },
-      { ym: '2002.07', text: '有限会社ナンバーフォー　入社' },
-      { ym: '2003.01', text: '一身上の都合により退職' },
-      { ym: '2003.02', text: '株式会社ヤマト運輸　入社' },
-      { ym: '2005.02', text: '一身上の都合により退職' },
-      { ym: '2005.02', text: '司法書士試験受験のため在宅（〜2007年7月）' },
-      { ym: '2007.11', text: '株式会社アデコ　人材登録（派遣先：NTT東日本）' },
-      { ym: '2009.04', text: '契約期間満了につき退職' },
-      { ym: '2010.04', text: '期間採用教員として山梨県採用' },
-      { ym: '2011.03', text: '任用期間満了につき退職' },
-      { ym: '2011.10', text: '有限会社フロンティア　入社' },
-      { ym: '2012.03', text: '会社都合により解雇' },
-      { ym: '2012.10', text: '有限会社プレザントとの業務請負契約締結' },
-      { ym: '2013.02', text: '業務請負契約終了' },
-      { ym: '2013.03', text: '株式会社デルタウイング　入社' },
-      { ym: '2017.09', text: '一身上の都合により退職' },
-      { ym: '2017.10', text: '光英システム株式会社　入社' },
-      { ym: '2019.02', text: '一身上の都合により退職' },
-      { ym: '2019.03', text: '株式会社ムロドー　入社' },
-      { ym: '2019.12', text: '会社倒産のため退職' },
-      { ym: '2019.12', text: '株式会社システムアイ　入社' },
-      { ym: '2020.12', text: '一身上の都合により退職' },
-      { ym: '2021.02', text: '株式会社グッドワークス　入社' },
-      { ym: '2021.12', text: '一身上の都合により退職' },
-      { ym: '2022.01', text: '2nd community株式会社　入社' },
-      { ym: '2022.07', text: '一身上の都合により退職' },
-      { ym: '2022.08', text: '株式会社ゼヒトモ　入社' },
-      { ym: '2023.08', text: '会社の業績悪化に伴う希望退職' },
-      { ym: '2024.02', text: 'サーバーフリー株式会社　入社' },
-      { ym: '2025.11', text: '一身上の都合により退職' },
-      { ym: '2026.01', text: '株式会社シマント　入社（現職）', current: true }
+      '期間採用教員等として不定期勤務（山梨県）',
+      '期間満了により退職',
+      '県採用教職員として勤務',
+      '一身上の都合により退職',
+      '有限会社ナンバーフォー　入社',
+      '一身上の都合により退職',
+      '株式会社ヤマト運輸　入社',
+      '一身上の都合により退職',
+      '司法書士試験受験のため在宅（〜2007年7月）',
+      '株式会社アデコ　人材登録（派遣先：NTT東日本）',
+      '契約期間満了につき退職',
+      '期間採用教員として山梨県採用',
+      '任用期間満了につき退職',
+      '有限会社フロンティア　入社',
+      '会社都合により解雇',
+      '有限会社プレザントとの業務請負契約締結',
+      '業務請負契約終了',
+      '株式会社デルタウイング　入社',
+      '一身上の都合により退職',
+      '光英システム株式会社　入社',
+      '一身上の都合により退職',
+      '株式会社ムロドー　入社',
+      '会社倒産のため退職',
+      '株式会社システムアイ　入社',
+      '一身上の都合により退職',
+      '株式会社グッドワークス　入社',
+      '一身上の都合により退職',
+      '2nd community株式会社　入社',
+      '一身上の都合により退職',
+      '株式会社ゼヒトモ　入社',
+      '会社の業績悪化に伴う希望退職',
+      'サーバーフリー株式会社　入社',
+      '一身上の都合により退職',
+      '株式会社シマント　入社（現職）'
     ],
     licenses: [
-      { ym: '1992.06', text: '普通自動車第一種免許　取得' },
-      { ym: '1995.03', text: '小学校教員第一種免許　取得' },
-      { ym: '2010.01', text: 'WEBクリエイター上級（株式会社サーティファイ実施）取得' },
-      { ym: '2011.10', text: '経済産業省　基本情報技術者試験　合格' }
+      '普通自動車第一種免許　取得',
+      '小学校教員第一種免許　取得',
+      'WEBクリエイター上級（株式会社サーティファイ実施）取得',
+      '経済産業省　基本情報技術者試験　合格'
     ],
     prParagraphs: [
       'React / TypeScript を得意とし、フロントエンド開発を中心に実務経験を積んできました。エディタは Vim、キーボードは US 配列派で、コマンドライン環境を好みます。',
@@ -353,52 +405,52 @@ const i18n = {
     scrollHint: '↕ Scroll to view full work history',
     footer: 'Resume — Shiro Ozawa \u00a0|\u00a0 As of September 10, 2024',
     education: [
-      { ym: '1988.04', text: 'Enrolled in Yamanashi Prefectural Kofu-Higashi High School' },
-      { ym: '1991.03', text: 'Graduated from Yamanashi Prefectural Kofu-Higashi High School' },
-      { ym: '1991.04', text: 'Enrolled in University of Yamanashi, Faculty of Education, Dept. of Educational Science' },
-      { ym: '1995.03', text: 'Graduated from University of Yamanashi, Faculty of Education, Dept. of Educational Science' }
+      'Enrolled in Yamanashi Prefectural Kofu-Higashi High School',
+      'Graduated from Yamanashi Prefectural Kofu-Higashi High School',
+      'Enrolled in University of Yamanashi, Faculty of Education, Dept. of Educational Science',
+      'Graduated from University of Yamanashi, Faculty of Education, Dept. of Educational Science'
     ],
     work: [
-      { ym: '1995.04', text: 'Worked as a fixed-term teacher (Yamanashi Prefecture)' },
-      { ym: '1999.03', text: 'Left upon contract expiration' },
-      { ym: '1999.04', text: 'Employed as a prefectural teacher' },
-      { ym: '2000.03', text: 'Resigned for personal reasons' },
-      { ym: '2002.07', text: 'Joined Number Four Co., Ltd.' },
-      { ym: '2003.01', text: 'Resigned for personal reasons' },
-      { ym: '2003.02', text: 'Joined Yamato Transport Co., Ltd.' },
-      { ym: '2005.02', text: 'Resigned for personal reasons' },
-      { ym: '2005.02', text: 'Studied for judicial scrivener exam (until Jul 2007)' },
-      { ym: '2007.11', text: 'Registered with Adecco Ltd. (Dispatched to NTT East)' },
-      { ym: '2009.04', text: 'Left upon contract expiration' },
-      { ym: '2010.04', text: 'Hired as a fixed-term teacher by Yamanashi Prefecture' },
-      { ym: '2011.03', text: 'Left upon term expiration' },
-      { ym: '2011.10', text: 'Joined Frontier Co., Ltd.' },
-      { ym: '2012.03', text: 'Terminated due to company circumstances' },
-      { ym: '2012.10', text: 'Contracted with Pleasant Co., Ltd.' },
-      { ym: '2013.02', text: 'Contract ended' },
-      { ym: '2013.03', text: 'Joined Delta Wing Co., Ltd.' },
-      { ym: '2017.09', text: 'Resigned for personal reasons' },
-      { ym: '2017.10', text: 'Joined Koei System Co., Ltd.' },
-      { ym: '2019.02', text: 'Resigned for personal reasons' },
-      { ym: '2019.03', text: 'Joined Murodo Co., Ltd.' },
-      { ym: '2019.12', text: 'Left due to company bankruptcy' },
-      { ym: '2019.12', text: 'Joined System-i Co., Ltd.' },
-      { ym: '2020.12', text: 'Resigned for personal reasons' },
-      { ym: '2021.02', text: 'Joined Goodworks Co., Ltd.' },
-      { ym: '2021.12', text: 'Resigned for personal reasons' },
-      { ym: '2022.01', text: 'Joined 2nd Community Co., Ltd.' },
-      { ym: '2022.07', text: 'Resigned for personal reasons' },
-      { ym: '2022.08', text: 'Joined Zehitomo, Inc.' },
-      { ym: '2023.08', text: 'Voluntary retirement due to company downturn' },
-      { ym: '2024.02', text: 'Joined Serverfree Co., Ltd.' },
-      { ym: '2025.11', text: 'Resigned for personal reasons' },
-      { ym: '2026.01', text: 'Joined Shimanto Co., Ltd. (Current)', current: true }
+      'Worked as a fixed-term teacher (Yamanashi Prefecture)',
+      'Left upon contract expiration',
+      'Employed as a prefectural teacher',
+      'Resigned for personal reasons',
+      'Joined Number Four Co., Ltd.',
+      'Resigned for personal reasons',
+      'Joined Yamato Transport Co., Ltd.',
+      'Resigned for personal reasons',
+      'Studied for judicial scrivener exam (until Jul 2007)',
+      'Registered with Adecco Ltd. (Dispatched to NTT East)',
+      'Left upon contract expiration',
+      'Hired as a fixed-term teacher by Yamanashi Prefecture',
+      'Left upon term expiration',
+      'Joined Frontier Co., Ltd.',
+      'Terminated due to company circumstances',
+      'Contracted with Pleasant Co., Ltd.',
+      'Contract ended',
+      'Joined Delta Wing Co., Ltd.',
+      'Resigned for personal reasons',
+      'Joined Koei System Co., Ltd.',
+      'Resigned for personal reasons',
+      'Joined Murodo Co., Ltd.',
+      'Left due to company bankruptcy',
+      'Joined System-i Co., Ltd.',
+      'Resigned for personal reasons',
+      'Joined Goodworks Co., Ltd.',
+      'Resigned for personal reasons',
+      'Joined 2nd Community Co., Ltd.',
+      'Resigned for personal reasons',
+      'Joined Zehitomo, Inc.',
+      'Voluntary retirement due to company downturn',
+      'Joined Serverfree Co., Ltd.',
+      'Resigned for personal reasons',
+      'Joined Shimanto Co., Ltd. (Current)'
     ],
     licenses: [
-      { ym: '1992.06', text: 'Ordinary Motor Vehicle License (Class 1)' },
-      { ym: '1995.03', text: 'Elementary School Teacher License (Class 1)' },
-      { ym: '2010.01', text: 'Web Creator Advanced Certificate (Certify Inc.)' },
-      { ym: '2011.10', text: 'METI Fundamental Information Technology Engineer Examination — Passed' }
+      'Ordinary Motor Vehicle License (Class 1)',
+      'Elementary School Teacher License (Class 1)',
+      'Web Creator Advanced Certificate (Certify Inc.)',
+      'METI Fundamental Information Technology Engineer Examination — Passed'
     ],
     prParagraphs: [
       'Specializing in React / TypeScript with extensive hands-on experience in frontend development. I prefer Vim as my editor, US keyboard layout, and a command-line-driven workflow.',
@@ -444,9 +496,9 @@ function applyLang(lang) {
   document.getElementById('edu-th-detail').textContent = t.thDetail;
   const eduTbody = document.getElementById('edu-tbody');
   eduTbody.innerHTML = '';
-  t.education.forEach(row => {
+  tableData.education.forEach((row, i) => {
     const tr = document.createElement('tr');
-    tr.innerHTML = '<td class="ym">' + row.ym + '</td><td>' + row.text + '</td>';
+    tr.innerHTML = '<td class="ym">' + row.ym + '</td><td>' + t.education[i] + '</td>';
     eduTbody.appendChild(tr);
   });
 
@@ -457,10 +509,10 @@ function applyLang(lang) {
   const workBody = document.querySelector('.work-scroll-body');
   const scrollTop = workBody.scrollTop;
   workBody.innerHTML = '';
-  t.work.forEach(row => {
+  tableData.work.forEach((row, i) => {
     const div = document.createElement('div');
     div.className = 'work-row' + (row.current ? ' current' : '');
-    div.innerHTML = '<span class="ym">' + row.ym + '</span><span class="ev">' + row.text + '</span>';
+    div.innerHTML = '<span class="ym">' + row.ym + '</span><span class="ev">' + t.work[i] + '</span>';
     workBody.appendChild(div);
   });
   workBody.scrollTop = scrollTop;
@@ -472,9 +524,9 @@ function applyLang(lang) {
   document.getElementById('lic-th-detail').textContent = t.thDetail;
   const licTbody = document.getElementById('lic-tbody');
   licTbody.innerHTML = '';
-  t.licenses.forEach(row => {
+  tableData.licenses.forEach((row, i) => {
     const tr = document.createElement('tr');
-    tr.innerHTML = '<td class="ym">' + row.ym + '</td><td>' + row.text + '</td>';
+    tr.innerHTML = '<td class="ym">' + row.ym + '</td><td>' + t.licenses[i] + '</td>';
     licTbody.appendChild(tr);
   });
 
