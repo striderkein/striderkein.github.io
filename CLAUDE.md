@@ -5,7 +5,6 @@ GitHub Pages で公開している履歴書（CV）サイト。
 ## Structure
 
 - `index.html` — メインページ（履歴書）
-- `encrypt-tool.html` — 個人情報暗号化ツール（AES-GCM）
 - `images/` — プロフィール写真など
 
 ## Tech Stack
