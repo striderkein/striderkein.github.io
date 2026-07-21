@@ -101,7 +101,13 @@
       <h1 class="name-ja" data-en="Shiro Ozawa">小澤　史朗</h1>
       <p class="birth-info" data-en="Born October 10, 1972 (Age 53)&nbsp;&nbsp;Domicile: Yamanashi, Japan">1972年10月10日生（満53歳）&nbsp;&nbsp;本籍：山梨県</p>
     </div>
-    <img src="images/striderkein.jpg" alt="小澤史朗" data-en-alt="Shiro Ozawa" style="width:100px;height:130px;object-fit:cover;border:1px solid var(--border);">
+    <div class="photo-placeholder" id="photo-slot">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--ink-lt);opacity:0.6;">
+        <rect x="3" y="11" width="18" height="11" rx="2"/>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+      <span>PROTECTED</span>
+    </div>
   </div>
 
   <section class="section">
@@ -120,7 +126,7 @@
             <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
           </svg>
         </div>
-        <p class="lock-label" data-en="Address, phone, and email are password-protected">住所・電話・メールはパスワードで保護されています</p>
+        <p class="lock-label" data-en="Address, phone, email, and photo are password-protected">住所・電話・メール・顔写真はパスワードで保護されています</p>
         <div class="pw-form">
           <input type="password" id="pw-input" placeholder="パスワードを入力" data-en-placeholder="Enter password" autocomplete="off">
           <button id="pw-btn" onclick="unlockContact()" data-en="Unlock">解錠</button>
@@ -310,6 +316,44 @@ function renderContact(data, lang) {
     '<a href="mailto:' + data.email + '">' + data.email + '</a>';
 }
 
+async function deriveKey(password, salt) {
+  const keyMaterial = await crypto.subtle.importKey(
+    'raw', new TextEncoder().encode(password),
+    'PBKDF2', false, ['deriveKey']
+  );
+  return crypto.subtle.deriveKey(
+    { name: 'PBKDF2', salt, iterations: 200000, hash: 'SHA-256' },
+    keyMaterial,
+    { name: 'AES-GCM', length: 256 },
+    false, ['decrypt']
+  );
+}
+
+// 顔写真の復号: images/photo.enc = salt(16) + iv(12) + ciphertext のバイナリ
+async function unlockPhoto(password) {
+  try {
+    const res = await fetch('images/photo.enc');
+    if (!res.ok) throw new Error('fetch failed');
+    const buf  = new Uint8Array(await res.arrayBuffer());
+    const salt = buf.slice(0, 16);
+    const iv   = buf.slice(16, 28);
+    const ct   = buf.slice(28);
+
+    const key      = await deriveKey(password, salt);
+    const plainBuf = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, ct);
+
+    const img = document.createElement('img');
+    img.src = URL.createObjectURL(new Blob([plainBuf], { type: 'image/jpeg' }));
+    img.setAttribute('data-ja-alt', '小澤史朗');
+    img.setAttribute('data-en-alt', 'Shiro Ozawa');
+    img.alt = currentLang === 'en' ? 'Shiro Ozawa' : '小澤史朗';
+    img.style.cssText = 'width:100px;height:130px;object-fit:cover;border:1px solid var(--border);';
+    document.getElementById('photo-slot').replaceWith(img);
+  } catch (_) {
+    // 写真が復号できなくてもプレースホルダのまま（連絡先の解錠は妨げない）
+  }
+}
+
 async function unlockContact() {
   const password = document.getElementById('pw-input').value;
   const errEl    = document.getElementById('pw-error');
@@ -328,16 +372,7 @@ async function unlockContact() {
     const iv         = fromB64(parts[1]);
     const ciphertext = fromB64(parts[2]);
 
-    const keyMaterial = await crypto.subtle.importKey(
-      'raw', new TextEncoder().encode(password),
-      'PBKDF2', false, ['deriveKey']
-    );
-    const key = await crypto.subtle.deriveKey(
-      { name: 'PBKDF2', salt, iterations: 200000, hash: 'SHA-256' },
-      keyMaterial,
-      { name: 'AES-GCM', length: 256 },
-      false, ['decrypt']
-    );
+    const key = await deriveKey(password, salt);
 
     const plainBuf = await crypto.subtle.decrypt(
       { name: 'AES-GCM', iv }, key, ciphertext
@@ -347,6 +382,8 @@ async function unlockContact() {
     renderContact(decryptedData, currentLang);
     document.getElementById('lock-panel').style.display    = 'none';
     document.getElementById('unlocked-grid').style.display = '';
+
+    unlockPhoto(password);
 
   } catch (_) {
     errEl.style.display = 'block';

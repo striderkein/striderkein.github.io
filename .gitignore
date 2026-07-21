@@ -105,3 +105,6 @@ dist
 
 # 個人情報暗号化ツール
 encrypt-tool.html
+
+# 平文の顔写真（暗号化済み images/photo.enc のみコミットする）
+images/striderkein.jpg
