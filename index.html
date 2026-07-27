@@ -89,7 +89,7 @@
 
 <header class="page-header">
   <span class="label" data-en="Resume">履　歴　書</span>
-  <span class="date" data-en="As of July 27, 2026">2026年7月27日現在</span>
+  <span class="date" id="as-of" data-en="As of July 27, 2026">2026年7月27日現在</span>
   <button id="lang-toggle" onclick="toggleLang()">EN</button>
 </header>
 
@@ -99,7 +99,7 @@
     <div>
       <p class="furigana" data-en="">おざわ　しろう</p>
       <h1 class="name-ja" data-en="Shiro Ozawa">小澤　史朗</h1>
-      <p class="birth-info" data-en="Born October 10, 1972 (Age 53)&nbsp;&nbsp;Domicile: Yamanashi, Japan">1972年10月10日生（満53歳）&nbsp;&nbsp;本籍：山梨県</p>
+      <p class="birth-info" id="birth-info" data-en="Born October 10, 1972 (Age 53)&nbsp;&nbsp;Domicile: Yamanashi, Japan">1972年10月10日生（満53歳）&nbsp;&nbsp;本籍：山梨県</p>
     </div>
     <div class="photo-placeholder" id="photo-slot">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--ink-lt);opacity:0.6;">
@@ -240,7 +240,7 @@
 
 </main>
 
-<footer data-en="Resume — Shiro Ozawa &nbsp;|&nbsp; As of July 27, 2026">
+<footer id="footer-line" data-en="Resume — Shiro Ozawa &nbsp;|&nbsp; As of July 27, 2026">
   履歴書 — 小澤史朗 &nbsp;|&nbsp; 2026年7月27日現在
 </footer>
 
@@ -306,6 +306,46 @@ function applyLang(lang) {
 
 function toggleLang() {
   applyLang(currentLang === 'ja' ? 'en' : 'ja');
+}
+
+// ----------------------------------------------------------------
+// 「◯年◯月◯日現在」と年齢を閲覧時点の日付で描画
+// HTML に直接書かれた値は JS 無効時のフォールバック
+// ----------------------------------------------------------------
+const BIRTH = { year: 1972, month: 10, day: 10 };
+const EN_MONTHS = ['January', 'February', 'March', 'April', 'May', 'June',
+                   'July', 'August', 'September', 'October', 'November', 'December'];
+
+function calcAge(today) {
+  let age = today.getFullYear() - BIRTH.year;
+  const month = today.getMonth() + 1;
+  if (month < BIRTH.month || (month === BIRTH.month && today.getDate() < BIRTH.day)) age--;
+  return age;
+}
+
+// data-ja / data-en の両方を書き換えることで言語切替後も動的な値が残る
+function setBilingual(el, ja, en) {
+  el.setAttribute('data-ja', ja);
+  el.setAttribute('data-en', en);
+  el.innerHTML = currentLang === 'en' ? en : ja;
+}
+
+function renderToday() {
+  const today = new Date();
+  const y = today.getFullYear(), m = today.getMonth() + 1, d = today.getDate();
+  const asOfJa = y + '年' + m + '月' + d + '日現在';
+  const asOfEn = 'As of ' + EN_MONTHS[m - 1] + ' ' + d + ', ' + y;
+
+  setBilingual(document.getElementById('as-of'), asOfJa, asOfEn);
+
+  setBilingual(document.getElementById('footer-line'),
+    '履歴書 — 小澤史朗 &nbsp;|&nbsp; ' + asOfJa,
+    'Resume — Shiro Ozawa &nbsp;|&nbsp; ' + asOfEn);
+
+  const age = calcAge(today);
+  setBilingual(document.getElementById('birth-info'),
+    '1972年10月10日生（満' + age + '歳）&nbsp;&nbsp;本籍：山梨県',
+    'Born October 10, 1972 (Age ' + age + ')&nbsp;&nbsp;Domicile: Yamanashi, Japan');
 }
 
 function renderContact(data, lang) {
@@ -395,6 +435,9 @@ async function unlockContact() {
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('pw-input')
     .addEventListener('keydown', e => { if (e.key === 'Enter') unlockContact(); });
+
+  // applyLang より先に呼ぶ（data-ja の初期キャプチャを動的な値にするため）
+  renderToday();
 
   // 初期言語: URL hash > localStorage > default (ja)
   let lang = 'ja';
